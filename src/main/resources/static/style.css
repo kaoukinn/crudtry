@@ -1,0 +1,82 @@
+body {
+    background-color: #F0F0F0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.container {
+    width: 50%;
+    margin: 5% auto;
+    background-color: #FFFFFF;
+    padding: 20px;
+    box-shadow: 0px 10px 15px #666;
+    border-radius: 10px;
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #B3C2D5;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
+
+h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    width: 45%;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button.addBtn {
+    padding: 10px;
+    background: #6ACC8B;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button.addBtn:hover {
+    background-color: #4EAC6D;
+}
+
+a {
+    text-decoration: none;
+    color: #1E90FF;
+    margin-right: 10px;
+}
+
+a.deleteBtn {
+    color: #FF0000;
+}

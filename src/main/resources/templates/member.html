@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通訊錄網頁</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        h1 {
+            font-weight: bold; /* 設置粗體文字 */
+            text-align: center; /* 設置文字置中 */
+            color: rgb(0, 0, 0); /* 設置文字顏色 */
+        }
+        body {background-color: darkgrey;}
+    </style>
+</head>
+<body>
+<!--    <p>background-color : 網頁背景顏色</p>-->
+    <h1>學生家長通訊錄</h1>
+
+<form class="header" th:action="@{/action}" method="post" th:object="${newMember}">
+    <label for="name">學生姓名:</label>
+    <input name="name" th:value="${param.name}" placeholder="輸入學生姓名" style="width: 150px;">
+    <label for="gender">聯絡人類別:</label>
+    <select name="gender" th:value="${param.gender}" style="width: 150px;">
+        <option value="爸爸">爸爸</option>
+        <option value="媽媽">媽媽</option>
+        <option value="阿公">阿公</option>
+        <option value="阿嬤">阿嬤</option>
+        <option value="其他">其他</option>
+    </select>
+    <label for="phone">聯絡人電話:</label>
+    <input name="phone" th:value="${param.phone}" placeholder="輸入電話" style="width: 150px;">
+    <label for="email">聯絡人信箱:</label>
+    <input name="email" th:value="${param.email}" placeholder="輸入Email" style="width: 150px;">
+    <label for="address">學生住址:</label>
+    <input name="address" th:value="${param.address}" placeholder="輸入住址" style="width: 150px;">
+
+    <button class="btn btn-secondary" type="submit" name="action" value="add">創建聯絡人</button>
+    <button class="btn btn-secondary" type="submit" name="action" value="search">搜尋</button>
+</form>
+
+<!-- 匯出CSV按鈕 -->
+<form th:action="@{/csv}" method="get">
+    <button class="btn btn-secondary" type="submit">匯出CSV檔案</button>
+</form>
+<form th:action="@{/excel}" method="get">
+    <button class="btn btn-secondary" type="submit">匯出Excel檔案</button>
+</form>
+<!--<button class="btn btn-secondary" onclick="exportToExcel()">匯出Excel檔案</button>-->
+
+
+    <!-- 聯絡人列表 -->
+<div id="contactList">
+    <table class="table">
+        <thead>
+        <tr class="table-secondary">
+            <th>學生姓名</th>
+            <th>聯絡人類別</th>
+            <th>聯絡人電話</th>
+            <th>聯絡人信箱</th>
+            <th>學生住址</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 使用Thymeleaf循環渲染聯絡人列表 -->
+        <tr class="table-light" th:each="member : ${newMember}">
+            <td th:text="${member.name}"></td>
+            <td th:text="${member.gender}"></td>
+            <td th:text="${member.phone}"></td>
+            <td th:text="${member.email}"></td>
+            <td th:text="${member.address}"></td>
+            <td>
+                <form th:action="@{/edit/{id}(id=${member.id})}" method="get">
+                    <button class="btn btn-outline-primary" type="submit">修改聯絡人</button>
+                </form>
+                <a class="btn btn-outline-danger" href="#" th:onclick="'javascript:confirmDelete(' + ${member.id} + ');'">刪除聯絡人</a>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function searchContact() {
+        const searchName = $("#searchName").val();
+
+        $.ajax({
+            type: "GET",
+            url: "/search",
+            data: { name: searchName },
+            dataType: "html",
+            success: function(data) {
+                // 將搜索結果頁面的URL設置為新的URL
+                window.location.href = "/search_results?name=" + searchName;
+            },
+            error: function() {
+                alert("搜索出現問題。");
+            }
+        });
+    }
+
+    function confirmDelete(memberId) {
+        console.log("確認删除聯絡人，ID：" + memberId);
+        if (confirm("確定要刪除這個聯絡人嗎？")) {
+            window.location.href = "/delete/" + memberId;
+        }
+    }
+    function exportToExcel() {
+        // 假设 memberList 是包含通讯录数据的 JavaScript 数组
+        const memberList = [
+            /* 通讯录数据对象 */
+        ];
+
+        // 使用 AJAX 请求触发导出操作
+        $.ajax({
+            url: "/toExcel",
+            type: "GET",
+            data: { data: memberList },
+            success: function () {
+                // 无需处理成功响应，浏览器会下载Excel文件
+            },
+            error: function () {
+                alert("匯出Excel檔案出錯。");
+            },
+        });
+    }
+</script>
+
+</body>
+</html>
+
+
+
+
